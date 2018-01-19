@@ -20,8 +20,8 @@ private:
 	//void initD3D(HWND hWnd);
 	//LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	// global declarations
-	LPDIRECT3D9 d3d;    // the pointer to our Direct3D interface
-	LPDIRECT3DDEVICE9 d3ddev;    // the pointer to the device class
+	LPDIRECT3D9 d3d = NULL;    // the pointer to our Direct3D interface
+	LPDIRECT3DDEVICE9 d3ddev = NULL;    // the pointer to the device class
 	LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    // the pointer to the vertex buffer
 
 												// function prototypes

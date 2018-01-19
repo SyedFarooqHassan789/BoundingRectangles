@@ -1,50 +1,6 @@
-﻿  main.cpp
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(43): error C2065: 'v_buffer': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(43): error C2227: left of '->Release' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(43): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(44): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(44): error C2227: left of '->Release' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(44): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(45): error C2065: 'd3d': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(45): error C2227: left of '->Release' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(45): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(143): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(156): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(156): error C2227: left of '->CreateVertexBuffer' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(156): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(160): error C2065: 'v_buffer': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(164): error C2065: 'v_buffer': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(164): error C2227: left of '->Lock' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(164): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(166): error C2065: 'v_buffer': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(166): error C2227: left of '->Unlock' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(166): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(168): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(168): error C2227: left of '->SetFVF' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(168): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(169): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(169): error C2227: left of '->SetStreamSource' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(169): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(169): error C2065: 'v_buffer': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(174): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(174): error C2227: left of '->Clear' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(174): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(176): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(176): error C2227: left of '->BeginScene' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(176): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(179): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(179): error C2227: left of '->SetFVF' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(179): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(182): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(182): error C2227: left of '->SetStreamSource' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(182): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(182): error C2065: 'v_buffer': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(185): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(185): error C2227: left of '->DrawPrimitive' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(185): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(187): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(187): error C2227: left of '->EndScene' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(187): note: type is 'unknown-type'
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(189): error C2065: 'd3ddev': undeclared identifier
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(189): error C2227: left of '->Present' must point to class/struct/union/generic type
-  c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(189): note: type is 'unknown-type'
+﻿  CreatingRectangle.cpp
+  Generating Code...
+  Compiling...
+  main.cpp
+  Generating Code...
+  BouncingRectangles.vcxproj -> C:\Users\Shadmanrazzaq\Desktop\Farooq Assignment\Code\BouncingRectangles\Debug\BouncingRectangles.exe

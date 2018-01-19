@@ -3,42 +3,21 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <iostream>
-//#include "main.h"
-// include the Direct3D Library file
+#include "CreatingRectangle.h"
 #pragma comment (lib, "d3d9.lib")
 
-// global declarations
-//LPDIRECT3D9 d3d;    // the pointer to our Direct3D interface
-//LPDIRECT3DDEVICE9 d3ddev;    // the pointer to the device class
-//LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    // the pointer to the vertex buffer
 
-											// function prototypes
-void initD3D(HWND hWnd);    // sets up and initializes Direct3D
-void render_frame(void);    // renders a single frame
-void cleanD3D(void);    // closes Direct3D and releases memory
-void init_display(void);    // 3D declarations
 
-struct CUSTOMVERTEX { FLOAT X, Y, Z, RHW; DWORD COLOR; };
-#define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
-// the WindowProc function prototype
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	// sort through and find what code to run for the message given
-	switch (message)
-	{
-		// this message is read when the window is closed
-	case WM_DESTROY:
-	{
-		// close the application entirely
-		PostQuitMessage(0);
-		return 0;
-	} break;
-	}
+// function prototypes
+d3ddev_vBuffer* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);   // sets up and initializes Direct3D
+void render_frame(LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);    // renders a single frame
+void cleanD3D(LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);    // closes Direct3D and releases memory
 
-	// Handle any messages the switch statement didn't
-	return DefWindowProc(hWnd, message, wParam, lParam);
-}
-void cleanD3D(void)
+						// the WindowProc function prototype
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+
+void cleanD3D(LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer)
 {
 	v_buffer->Release();    // close and release the vertex buffer
 	d3ddev->Release();    // close and release the 3D device
@@ -50,6 +29,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
+	LPDIRECT3D9 d3d = NULL;    // the pointer to our Direct3D interface
+	LPDIRECT3DDEVICE9 d3ddev = NULL;    // the pointer to the device class
+	LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    // the pointer to the vertex buffer
 	// the handle for the window, filled by a function
 	HWND hWnd;
 	// this struct holds information for the window class
@@ -76,8 +58,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		"WindowClass1",    // name of the window class
 		"Bounded",   // title of the window
 		WS_OVERLAPPEDWINDOW,    // window style
-		300,    // x-position of the window
-		300,    // y-position of the window
+		0,    // x-position of the window
+		0,    // y-position of the window
 		800,    // width of the window
 		600,    // height of the window
 		NULL,    // we have no parent window, NULL
@@ -89,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	ShowWindow(hWnd, nCmdShow);
 
 	// set up and initialize Direct3D
-	initD3D(hWnd);
+	d3ddev_vBuffer* d3dv_buffer = initD3D(hWnd, d3d, d3ddev, v_buffer);
 
 	// this struct holds Windows event messages
 	MSG msg;
@@ -106,19 +88,37 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if (msg.message == WM_QUIT)
 			break;
 
-		render_frame();
+		render_frame(d3dv_buffer->d3ddev, d3dv_buffer->v_buffer);
 	}
 
 	// clean up DirectX and COM
-	cleanD3D();
+	cleanD3D(d3d, d3dv_buffer->d3ddev, d3dv_buffer->v_buffer);
 
 	// return this part of the WM_QUIT message to Windows
 	return msg.wParam;
 
 }
 // this is the main message handler for the program
+// the WindowProc function prototype
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// sort through and find what code to run for the message given
+	switch (message)
+	{
+		// this message is read when the window is closed
+	case WM_DESTROY:
+	{
+		// close the application entirely
+		PostQuitMessage(0);
+		return 0;
+	} break;
+	}
 
-void initD3D(HWND hWnd)
+	// Handle any messages the switch statement didn't
+	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+d3ddev_vBuffer* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer)
 {
 
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
@@ -141,34 +141,17 @@ void initD3D(HWND hWnd)
 		&d3dpp,
 		&d3ddev);
 
-	init_display();    // call the function to initialize the triangle
+	CreatingRectangle* creatingRectangle = new CreatingRectangle();
+	d3ddev_vBuffer* d3dv_buffer = creatingRectangle->createRectangle(d3ddev, v_buffer);    // call the function to initialize the triangle
+	
+	d3dv_buffer->d3ddev->SetRenderState(D3DRS_LIGHTING, FALSE);    // turn off the 3D lighting
+
+	return d3dv_buffer;
 }
 
 
-void init_display() {
-	CUSTOMVERTEX OurVertices[] =
-	{
-		{ 320.0f, 50.0f, 1.0f, 1.0f, D3DCOLOR_XRGB(0, 0, 255), },
-		{ 520.0f, 400.0f, 1.0f, 1.0f, D3DCOLOR_XRGB(0, 255, 0), },
-		{ 120.0f, 400.0f, 1.0f, 1.0f, D3DCOLOR_XRGB(255, 0, 0), },
-	};
-	d3ddev->CreateVertexBuffer(3 * sizeof(CUSTOMVERTEX),
-		0,
-		CUSTOMFVF,
-		D3DPOOL_MANAGED,
-		&v_buffer,
-		NULL);
-	VOID* pVoid;    // the void* we were talking about
-
-	v_buffer->Lock(0, 0, (void**)&pVoid, 0);    // locks v_buffer, the buffer we made earlier
-	memcpy(pVoid, OurVertices, sizeof(OurVertices));    // copy vertices to the vertex buffer
-	v_buffer->Unlock();    // unlock v_buffer
-
-	d3ddev->SetFVF(CUSTOMFVF);
-	d3ddev->SetStreamSource(0, v_buffer, 0, sizeof(CUSTOMVERTEX));
-}
-// this is the function used to render a single frame
-void render_frame(void)
+//// this is the function used to render a single frame
+void render_frame(LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer)
 {
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
@@ -176,12 +159,63 @@ void render_frame(void)
 
 	// select which vertex format we are using
 	d3ddev->SetFVF(CUSTOMFVF);
+	
+
+
+
+
+	//// SET UP THE PIPELINE
+
+	//D3DXMATRIX matRotateY;    // a matrix to store the rotation information
+
+	//static float index = 0.0f; index += 0.05f;    // an ever-increasing float value
+
+	//											  // build a matrix to rotate the model based on the increasing float value
+	//D3DXMatrixRotationY(&matRotateY, index);
+
+	//// tell Direct3D about our matrix
+	//d3ddev->SetTransform(D3DTS_WORLD, &matRotateY);
+
+	//D3DXMATRIX matView;    // the view transform matrix
+
+	//D3DXMatrixLookAtLH(&matView,
+	//	&D3DXVECTOR3(0.0f, 0.0f, 10.0f),    // the camera position
+	//	&D3DXVECTOR3(0.0f, 0.0f, 0.0f),    // the look-at position
+	//	&D3DXVECTOR3(0.0f, 1.0f, 0.0f));    // the up direction
+
+	//d3ddev->SetTransform(D3DTS_VIEW, &matView);    // set the view transform to matView
+
+	//D3DXMATRIX matProjection;     // the projection transform matrix
+
+	//D3DXMatrixPerspectiveFovLH(&matProjection,
+	//	D3DXToRadian(45),    // the horizontal field of view
+	//	(FLOAT)800 / (FLOAT)600, // aspect ratio
+	//	1.0f,    // the near view-plane
+	//	100.0f);    // the far view-plane
+
+	//d3ddev->SetTransform(D3DTS_PROJECTION, &matProjection);    // set the projection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// select the vertex buffer to display
 	d3ddev->SetStreamSource(0, v_buffer, 0, sizeof(CUSTOMVERTEX));
 
 	// copy the vertex buffer to the back buffer
-	d3ddev->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 1);
+	d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
 	d3ddev->EndScene();
 
