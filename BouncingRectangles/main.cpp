@@ -4,13 +4,14 @@
 #include <d3dx9.h>
 #include <iostream>
 #include "CreatingRectangle.h"
+#include <ctime>
 #pragma comment (lib, "d3d9.lib")
 
 
 
 // function prototypes
 d3ddev_vBuffer* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);   // sets up and initializes Direct3D
-void render_frame(LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);    // renders a single frame
+void render_frame(LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer, int numberOfRectangle);    // renders a single frame
 void cleanD3D(LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);    // closes Direct3D and releases memory
 
 						// the WindowProc function prototype
@@ -29,6 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
+	srand(time(NULL));
 	LPDIRECT3D9 d3d = NULL;    // the pointer to our Direct3D interface
 	LPDIRECT3DDEVICE9 d3ddev = NULL;    // the pointer to the device class
 	LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    // the pointer to the vertex buffer
@@ -88,7 +90,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if (msg.message == WM_QUIT)
 			break;
 
-		render_frame(d3dv_buffer->d3ddev, d3dv_buffer->v_buffer);
+		render_frame(d3dv_buffer->d3ddev, d3dv_buffer->v_buffer, d3dv_buffer->numberOfRectangles);
 	}
 
 	// clean up DirectX and COM
@@ -144,78 +146,37 @@ d3ddev_vBuffer* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LP
 	CreatingRectangle* creatingRectangle = new CreatingRectangle();
 	d3ddev_vBuffer* d3dv_buffer = creatingRectangle->createRectangle(d3ddev, v_buffer);    // call the function to initialize the triangle
 	
-	d3dv_buffer->d3ddev->SetRenderState(D3DRS_LIGHTING, FALSE);    // turn off the 3D lighting
+	
 
 	return d3dv_buffer;
 }
 
 
 //// this is the function used to render a single frame
-void render_frame(LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer)
+void render_frame(LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer, int numberOfRectangle)
 {
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
 	d3ddev->BeginScene();
 
 	// select which vertex format we are using
-	d3ddev->SetFVF(CUSTOMFVF);
 	
-
-
-
-
-	//// SET UP THE PIPELINE
-
-	//D3DXMATRIX matRotateY;    // a matrix to store the rotation information
-
-	//static float index = 0.0f; index += 0.05f;    // an ever-increasing float value
-
-	//											  // build a matrix to rotate the model based on the increasing float value
-	//D3DXMatrixRotationY(&matRotateY, index);
-
-	//// tell Direct3D about our matrix
-	//d3ddev->SetTransform(D3DTS_WORLD, &matRotateY);
-
-	//D3DXMATRIX matView;    // the view transform matrix
-
-	//D3DXMatrixLookAtLH(&matView,
-	//	&D3DXVECTOR3(0.0f, 0.0f, 10.0f),    // the camera position
-	//	&D3DXVECTOR3(0.0f, 0.0f, 0.0f),    // the look-at position
-	//	&D3DXVECTOR3(0.0f, 1.0f, 0.0f));    // the up direction
-
-	//d3ddev->SetTransform(D3DTS_VIEW, &matView);    // set the view transform to matView
-
-	//D3DXMATRIX matProjection;     // the projection transform matrix
-
-	//D3DXMatrixPerspectiveFovLH(&matProjection,
-	//	D3DXToRadian(45),    // the horizontal field of view
-	//	(FLOAT)800 / (FLOAT)600, // aspect ratio
-	//	1.0f,    // the near view-plane
-	//	100.0f);    // the far view-plane
-
-	//d3ddev->SetTransform(D3DTS_PROJECTION, &matProjection);    // set the projection
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	// select the vertex buffer to display
 	d3ddev->SetStreamSource(0, v_buffer, 0, sizeof(CUSTOMVERTEX));
+	d3ddev->SetFVF(CUSTOMFVF);
+	// copy the vertex buffer to the back buffer
+	
+	//d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0 * 4, 2);
+	//d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 1 * 4, 2);
+
+	for(int i=0; i< numberOfRectangle; i++){
+		d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, i*4, 2);
+	}
 
 	// copy the vertex buffer to the back buffer
-	d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+	//d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 4, 2);
 
 	d3ddev->EndScene();
 
