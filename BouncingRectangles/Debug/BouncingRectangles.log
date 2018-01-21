@@ -1,9 +1,3 @@
-﻿  main.cpp
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\main.cpp(33): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  CreatingRectangle.cpp
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\creatingrectangle.cpp(36): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\creatingrectangle.cpp(37): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\creatingrectangle.cpp(39): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\creatingrectangle.cpp(40): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
+﻿  CreatingRectangle.cpp
+c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\creatingrectangle.cpp(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   BouncingRectangles.vcxproj -> C:\Users\Shadmanrazzaq\Desktop\Farooq Assignment\Code\BouncingRectangles\Debug\BouncingRectangles.exe

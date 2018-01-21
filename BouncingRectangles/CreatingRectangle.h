@@ -2,39 +2,48 @@
 #ifndef MAIN_H
 #define MAIN_H
 #define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
-
+//#define CUSTOMFVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
 //#define CUSTOMFVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <iostream>
+#include <vector>
+using namespace std;
 
-struct CUSTOMVERTEX
+enum Direction { RIGHT, LEFT, UP, DOWN };
+
+struct Point
 {
 	FLOAT x, y, z, rhw;    // from the D3DFVF_XYZRHW flag
 	DWORD color;    // from the D3DFVF_DIFFUSE flag
 };
-//struct CUSTOMVERTEX { FLOAT X, Y, Z; DWORD COLOR; };
-struct d3ddev_vBuffer {
+
+struct CustomRectangle
+{
+	Point points[4];
+	Direction direction;
+};
+struct kuta {
+	vector<CustomRectangle> rectangles;
 	LPDIRECT3DDEVICE9 d3ddev;
-	LPDIRECT3DVERTEXBUFFER9 v_buffer;
-	int numberOfRectangles;
 };
 class CreatingRectangle
 {
 public:
 	CreatingRectangle();
-	d3ddev_vBuffer* createRectangle(LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);
-	int numberOfRectanglesToGenerate();
-	int startingPointX();
-	int startingPointY();
-	int getRandomRectangleWidth();
-	int getRandomRectangleHeight();
-	CUSTOMVERTEX OurVertices;
+	vector<CustomRectangle> createRectangle();
+	Point OurVertices;
 
 	~CreatingRectangle();
 private:
 	int width = 800;
 	int height = 600;
+	float numberOfRectanglesToGenerate();
+	float startingPointX();
+	float startingPointY();
+	float getRandomRectangleWidth();
+	float getRandomRectangleHeight();
+	int getRandomColor();
 };
 #endif
 
