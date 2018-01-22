@@ -12,8 +12,8 @@ using namespace std;
 
 
 // function prototypes
-kuta* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev);   // sets up and initializes Direct3D
-void render_frame(kuta* k);    // renders a single frame
+kuta initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev);   // sets up and initializes Direct3D
+void render_frame(kuta& m);    // renders a single frame
 void cleanD3D(LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);    // closes Direct3D and releases memory
 
 						// the WindowProc function prototype
@@ -32,7 +32,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
-	//srand(time(NULL));
+	srand(time(NULL));
 	LPDIRECT3D9 d3d = NULL;    // the pointer to our Direct3D interface
 	LPDIRECT3DDEVICE9 d3ddev = NULL;    // the pointer to the device class
 	LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    // the pointer to the vertex buffer
@@ -75,12 +75,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	ShowWindow(hWnd, nCmdShow);
 
 	// set up and initialize Direct3D
-	kuta* k = initD3D(hWnd, d3d, d3ddev);
+	kuta k = initD3D(hWnd, d3d, d3ddev);
 
 	// this struct holds Windows event messages
 	MSG msg;
 
 	// wait for the next message in the queue, store the result in 'msg'
+
 	while (TRUE)
 	{
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -91,6 +92,50 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 		if (msg.message == WM_QUIT)
 			break;
+
+		//update rectangles info and then pass it to render method
+		for (int i = 0; i < k.rectangles.size(); i++) {
+			if (k.rectangles[i].direction == LEFT) {
+				k.rectangles[i].points[0].x -= k.rectangles[i].speed;
+				k.rectangles[i].points[1].x -= k.rectangles[i].speed;
+				k.rectangles[i].points[2].x -= k.rectangles[i].speed;
+				k.rectangles[i].points[3].x -= k.rectangles[i].speed;
+
+				if (k.rectangles[i].points[0].x <= 0) {
+					k.rectangles[i].direction = RIGHT;
+				}
+			}
+			else if (k.rectangles[i].direction == RIGHT) {
+				k.rectangles[i].points[0].x += k.rectangles[i].speed;
+				k.rectangles[i].points[1].x += k.rectangles[i].speed;
+				k.rectangles[i].points[2].x += k.rectangles[i].speed;
+				k.rectangles[i].points[3].x += k.rectangles[i].speed;
+
+				if (k.rectangles[i].points[1].x >= 800) {
+					k.rectangles[i].direction = LEFT;
+				}
+			}
+			else if (k.rectangles[i].direction == UP) {
+				k.rectangles[i].points[0].y += k.rectangles[i].speed;
+				k.rectangles[i].points[1].y += k.rectangles[i].speed;
+				k.rectangles[i].points[2].y += k.rectangles[i].speed;
+				k.rectangles[i].points[3].y += k.rectangles[i].speed;
+
+				if (k.rectangles[i].points[2].y >= 600) {
+					k.rectangles[i].direction = DOWN;
+				}
+			}
+			else {
+				k.rectangles[i].points[0].y -= k.rectangles[i].speed;
+				k.rectangles[i].points[1].y -= k.rectangles[i].speed;
+				k.rectangles[i].points[2].y -= k.rectangles[i].speed;
+				k.rectangles[i].points[3].y -= k.rectangles[i].speed;
+
+				if (k.rectangles[i].points[0].y <= 0) {
+					k.rectangles[i].direction = UP;
+				}
+			}
+		}
 
 		render_frame(k);
 	}
@@ -122,7 +167,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-kuta* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev)
+kuta initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev)
 {
 
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
@@ -149,36 +194,32 @@ kuta* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev)
 	vector<CustomRectangle> rectangles = creatingRectangle->createRectangle();    // call the function to initialize the triangle
 	d3ddev->SetRenderState(D3DRS_LIGHTING, FALSE);    // turn off the 3D lighting
 	
-	kuta* k = new kuta();
-	k->d3ddev = d3ddev;
-	k->rectangles = rectangles;
+	kuta k;
+	k.d3ddev = d3ddev;
+	k.rectangles = rectangles;
 
 	return k;
 }
 
 
 //// this is the function used to render a single frame
-void render_frame(kuta* k)
+void render_frame(kuta& m)
 {
-	int numberOfPoints = k->rectangles.size() * 4;
+	kuta k = m;
+	int numberOfPoints = k.rectangles.size() * 4;
 	Point *points = new Point[numberOfPoints];
-	for (int i = 0; i < k->rectangles.size(); i++) {
-		points[i*4] = k->rectangles[i].points[0];
-		points[(i*4) + 1] = k->rectangles[i].points[1];
-		points[(i*4) + 2] = k->rectangles[i].points[2];
-		points[(i*4) + 3] = k->rectangles[i].points[3];
+
+	for (int i = 0; i < k.rectangles.size(); i++) {
+		CustomRectangle rectangle = k.rectangles[i];
+
+		points[i*4] = rectangle.points[0];
+		points[(i*4) + 1] = rectangle.points[1];
+		points[(i*4) + 2] = rectangle.points[2];
+		points[(i*4) + 3] = rectangle.points[3];
 	}
 
-	/*static float test = 0;
-	rect_array[0].x += test;
-	rect_array[1].x += test;
-	rect_array[2].x += test;
-	rect_array[3].x += test;
-
-	test += 0.05;*/
-
 	LPDIRECT3DVERTEXBUFFER9 v_buffer;
-	k->d3ddev->CreateVertexBuffer(numberOfPoints * sizeof(Point),
+	k.d3ddev->CreateVertexBuffer(numberOfPoints * sizeof(Point),
 		0,
 		CUSTOMFVF,
 		D3DPOOL_MANAGED,
@@ -190,69 +231,19 @@ void render_frame(kuta* k)
 	memcpy(pVoid, points, numberOfPoints * sizeof(Point));
 	v_buffer->Unlock();
 
-	k->d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-	k->d3ddev->BeginScene();
+	k.d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	k.d3ddev->BeginScene();
 
 	// select which vertex format we are using
 	// select the vertex buffer to display
-	k->d3ddev->SetFVF(CUSTOMFVF);
-	k->d3ddev->SetStreamSource(0, v_buffer, 0, sizeof(Point));
-	for(int i=0; i< k->rectangles.size(); i++){
-		
-
+	k.d3ddev->SetFVF(CUSTOMFVF);
+	k.d3ddev->SetStreamSource(0, v_buffer, 0, sizeof(Point));
+	for(int i=0; i< k.rectangles.size(); i++){
 		// copy the vertex buffer to the back buffer
-		k->d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, i * 4, 2);
+		k.d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, i * 4, 2);
 	}
 
-	k->d3ddev->EndScene();
+	k.d3ddev->EndScene();
 
-	k->d3ddev->Present(NULL, NULL, NULL, NULL);
+	k.d3ddev->Present(NULL, NULL, NULL, NULL);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// this is the function that cleans up Direct3D and COM
-/*D3DXMATRIX matTranslate1;
-D3DXMatrixTranslation(&matTranslate1, -10, 0, 0.0f);
-d3ddev->SetTransform(D3DTS_WORLD, &matTranslate1);*/
-
-//if (i == 0) {
-/*D3DXMATRIX matTranslate2;
-D3DXMatrixTranslation(&matTranslate2, index1, 0, 0.0f);
-index1+=0.001f;
-
-// //tell Direct3D about our matrix
-d3ddev->SetTransform(D3DTS_WORLD, &matTranslate2);
-
-D3DXMATRIX matView;    // the view transform matrix
-
-D3DXMatrixLookAtLH(&matView,
-&D3DXVECTOR3(0,00, 10),    // the camera position
-&D3DXVECTOR3(0.0f, 0.0f, 0.0f),    // the look-at position
-&D3DXVECTOR3(0.0f, 100, 0.0f));    // the up direction
-
-d3ddev->SetTransform(D3DTS_VIEW, &matView);    // set the view transform to matView
-
-D3DXMATRIX matProjection;     // the projection transform matrix
-
-D3DXMatrixPerspectiveFovLH(&matProjection,
-D3DXToRadian(175),    // the horizontal field of view
-(FLOAT)800 / (FLOAT)600, // aspect ratio
-1.0f,    // the near view-plane
-200.0f);    // the far view-plane
-
-d3ddev->SetTransform(D3DTS_PROJECTION, &matProjection);    // set the projection
-d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, i * 4, 2);*/
-
-//} else {
-//d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, i*4, 2);
-//}

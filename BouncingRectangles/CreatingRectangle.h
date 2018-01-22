@@ -20,8 +20,9 @@ struct Point
 
 struct CustomRectangle
 {
-	Point points[4];
+	vector<Point> points;
 	Direction direction;
+	float speed;
 };
 struct kuta {
 	vector<CustomRectangle> rectangles;
@@ -44,6 +45,8 @@ private:
 	float getRandomRectangleWidth();
 	float getRandomRectangleHeight();
 	int getRandomColor();
+	Direction getRandomDirection();
+	float getRandomSpeed();
 };
 #endif
 

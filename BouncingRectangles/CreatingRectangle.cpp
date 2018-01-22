@@ -13,6 +13,7 @@ CreatingRectangle::~CreatingRectangle()
 }
 vector<CustomRectangle> CreatingRectangle::createRectangle() {
 	int numberOfRectangles = numberOfRectanglesToGenerate();
+
 	vector<CustomRectangle> rectangles(numberOfRectangles);
 
 	for (int i = 0; i < numberOfRectangles; i ++) {
@@ -24,10 +25,15 @@ vector<CustomRectangle> CreatingRectangle::createRectangle() {
 		int randomRectColor = getRandomColor();
 
 		CustomRectangle rectangle;
-		rectangle.points[0] = { startingX, startingY, 0.0f,0.0f, D3DCOLOR_XRGB(255, 255, 0), };
-		rectangle.points[1] = { startingX + rectangleHeight , startingY, 0.0f, 0.0f,D3DCOLOR_XRGB(255, 255, 0), };
-		rectangle.points[2] = { startingX, startingY + rectangleWidth, 0.0f, 1.0f,D3DCOLOR_XRGB(255, 255, 0), };
-		rectangle.points[3] = { (startingX + rectangleHeight), (startingY + rectangleWidth), 0.0f, 0.0f,D3DCOLOR_XRGB(255, 255, 0), };
+		rectangle.points.reserve(4);
+
+		rectangle.points.push_back({ startingX, startingY, 0.0f,0.0f, D3DCOLOR_XRGB(getRandomColor(), getRandomColor(), getRandomColor()) });
+		rectangle.points.push_back({ startingX + rectangleHeight , startingY, 0.0f, 0.0f,D3DCOLOR_XRGB(getRandomColor(), getRandomColor(), getRandomColor())});
+		rectangle.points.push_back({ startingX, startingY + rectangleWidth, 0.0f, 1.0f,D3DCOLOR_XRGB(getRandomColor(), getRandomColor(), getRandomColor())});
+		rectangle.points.push_back({ (startingX + rectangleHeight), (startingY + rectangleWidth), 0.0f, 0.0f,D3DCOLOR_XRGB(getRandomColor(), getRandomColor(), getRandomColor())});
+
+		rectangle.direction = getRandomDirection();
+		rectangle.speed = getRandomSpeed();
 
 		rectangles[i] = rectangle;
 	}
@@ -35,8 +41,7 @@ vector<CustomRectangle> CreatingRectangle::createRectangle() {
 	return rectangles;
 }
 float CreatingRectangle::numberOfRectanglesToGenerate() {
-	//return (float)(3 + (rand() % 7));
-	return 9;
+	return (float)(3 + (rand() % 7));
 }
 float CreatingRectangle::startingPointX() {
 	return (float)(rand() % 752);
@@ -52,4 +57,19 @@ float CreatingRectangle::getRandomRectangleWidth() {
 }
 float CreatingRectangle::getRandomRectangleHeight() {
 	return (float)(24 + (rand() % 36));
+}
+Direction CreatingRectangle::getRandomDirection() {
+	int random = rand() % 4;
+	if (random == 0) {
+		return LEFT;
+	} else if (random == 1) {
+		return RIGHT;
+	} else if (random == 2) {
+		return UP;
+	} else {
+		return DOWN;
+	}
+}
+float CreatingRectangle::getRandomSpeed() {
+	return (10.0f + (rand() % 90)) / 50.f;
 }
