@@ -18,15 +18,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CreatingRectangle.cpp">
+    <ClCompile Include="RectangleCreation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CreatingRectangle.h">
+    <ClInclude Include="RectangleCreation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

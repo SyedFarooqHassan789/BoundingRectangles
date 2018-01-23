@@ -1,3 +1,7 @@
-﻿  CreatingRectangle.cpp
-c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\creatingrectangle.cpp(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+﻿  RectangleCreation.cpp
+c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\rectanglecreation.cpp(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\rectanglecreation.cpp(29): warning C4002: too many actual parameters for macro 'D3DCOLOR_XRGB'
+c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\rectanglecreation.cpp(30): warning C4002: too many actual parameters for macro 'D3DCOLOR_XRGB'
+c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\rectanglecreation.cpp(31): warning C4002: too many actual parameters for macro 'D3DCOLOR_XRGB'
+c:\users\shadmanrazzaq\desktop\farooq assignment\code\bouncingrectangles\bouncingrectangles\rectanglecreation.cpp(32): warning C4002: too many actual parameters for macro 'D3DCOLOR_XRGB'
   BouncingRectangles.vcxproj -> C:\Users\Shadmanrazzaq\Desktop\Farooq Assignment\Code\BouncingRectangles\Debug\BouncingRectangles.exe

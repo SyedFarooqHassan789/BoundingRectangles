@@ -1,31 +1,22 @@
-
+#include "RectangleCreation.h"
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-#include <iostream>
-#include "CreatingRectangle.h"
 #include <ctime>
-#include <vector>
-using namespace std;
+#define SCREEN_WIDTH  800
+#define SCREEN_HEIGHT 600
 #pragma comment (lib, "d3d9.lib")
 
 
 
 // function prototypes
-kuta initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev);   // sets up and initializes Direct3D
-void render_frame(kuta& m);    // renders a single frame
-void cleanD3D(LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer);    // closes Direct3D and releases memory
-
-						// the WindowProc function prototype
+GameProperties* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev);   // sets up and initializes Direct3D
+void render_frame(GameProperties* k);    // renders a single frame
+void updateRectangles(GameProperties* gameprop); //updating rectangles
+// the WindowProc function prototype
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 
-void cleanD3D(LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev, LPDIRECT3DVERTEXBUFFER9 v_buffer)
-{
-	v_buffer->Release();    // close and release the vertex buffer
-	d3ddev->Release();    // close and release the 3D device
-	d3d->Release();    // close and release Direct3D
-}
 // the entry point for any Windows program
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -36,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPDIRECT3D9 d3d = NULL;    // the pointer to our Direct3D interface
 	LPDIRECT3DDEVICE9 d3ddev = NULL;    // the pointer to the device class
 	LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    // the pointer to the vertex buffer
-	// the handle for the window, filled by a function
+												// the handle for the window, filled by a function
 	HWND hWnd;
 	// this struct holds information for the window class
 	WNDCLASSEX wc;
@@ -50,7 +41,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	wc.lpfnWndProc = WindowProc;
 	wc.hInstance = hInstance;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW);
 	wc.lpszClassName = "WindowClass1";
 
 	// register the window class
@@ -64,18 +55,19 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		WS_OVERLAPPEDWINDOW,    // window style
 		0,    // x-position of the window
 		0,    // y-position of the window
-		800,    // width of the window
-		600,    // height of the window
+		SCREEN_WIDTH,    // width of the window
+		SCREEN_HEIGHT,    // height of the window
 		NULL,    // we have no parent window, NULL
 		NULL,    // we aren't using menus, NULL
 		hInstance,    // application handle
 		NULL);    // used with multiple windows, NULL
 
-	// display the window on the screen
+				  // display the window on the screen
 	ShowWindow(hWnd, nCmdShow);
 
 	// set up and initialize Direct3D
-	kuta k = initD3D(hWnd, d3d, d3ddev);
+	GameProperties* gameprop;
+	gameprop = initD3D(hWnd, d3d, d3ddev);
 
 	// this struct holds Windows event messages
 	MSG msg;
@@ -84,6 +76,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	while (TRUE)
 	{
+
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -94,54 +87,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			break;
 
 		//update rectangles info and then pass it to render method
-		for (int i = 0; i < k.rectangles.size(); i++) {
-			if (k.rectangles[i].direction == LEFT) {
-				k.rectangles[i].points[0].x -= k.rectangles[i].speed;
-				k.rectangles[i].points[1].x -= k.rectangles[i].speed;
-				k.rectangles[i].points[2].x -= k.rectangles[i].speed;
-				k.rectangles[i].points[3].x -= k.rectangles[i].speed;
-
-				if (k.rectangles[i].points[0].x <= 0) {
-					k.rectangles[i].direction = RIGHT;
-				}
-			}
-			else if (k.rectangles[i].direction == RIGHT) {
-				k.rectangles[i].points[0].x += k.rectangles[i].speed;
-				k.rectangles[i].points[1].x += k.rectangles[i].speed;
-				k.rectangles[i].points[2].x += k.rectangles[i].speed;
-				k.rectangles[i].points[3].x += k.rectangles[i].speed;
-
-				if (k.rectangles[i].points[1].x >= 800) {
-					k.rectangles[i].direction = LEFT;
-				}
-			}
-			else if (k.rectangles[i].direction == UP) {
-				k.rectangles[i].points[0].y += k.rectangles[i].speed;
-				k.rectangles[i].points[1].y += k.rectangles[i].speed;
-				k.rectangles[i].points[2].y += k.rectangles[i].speed;
-				k.rectangles[i].points[3].y += k.rectangles[i].speed;
-
-				if (k.rectangles[i].points[2].y >= 600) {
-					k.rectangles[i].direction = DOWN;
-				}
-			}
-			else {
-				k.rectangles[i].points[0].y -= k.rectangles[i].speed;
-				k.rectangles[i].points[1].y -= k.rectangles[i].speed;
-				k.rectangles[i].points[2].y -= k.rectangles[i].speed;
-				k.rectangles[i].points[3].y -= k.rectangles[i].speed;
-
-				if (k.rectangles[i].points[0].y <= 0) {
-					k.rectangles[i].direction = UP;
-				}
-			}
-		}
-
-		render_frame(k);
+		updateRectangles(gameprop);
+		//calling render method
+		render_frame(gameprop);
 	}
-
-	// clean up DirectX and COM
-	cleanD3D(d3d, d3ddev, v_buffer);
 
 	// return this part of the WM_QUIT message to Windows
 	return msg.wParam;
@@ -167,9 +116,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-kuta initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev)
+GameProperties* initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev)
 {
-
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
 	D3DPRESENT_PARAMETERS d3dpp;
@@ -190,60 +138,106 @@ kuta initD3D(HWND hWnd, LPDIRECT3D9 d3d, LPDIRECT3DDEVICE9 d3ddev)
 		&d3dpp,
 		&d3ddev);
 
-	CreatingRectangle* creatingRectangle = new CreatingRectangle();
-	vector<CustomRectangle> rectangles = creatingRectangle->createRectangle();    // call the function to initialize the triangle
-	d3ddev->SetRenderState(D3DRS_LIGHTING, FALSE);    // turn off the 3D lighting
-	
-	kuta k;
-	k.d3ddev = d3ddev;
-	k.rectangles = rectangles;
+	vector<CustomRectangle> rectangles = RectangleCreation().createRectangle();
 
-	return k;
+	GameProperties* gameprop;
+	gameprop = new GameProperties;
+	gameprop->d3ddev = d3ddev;
+	gameprop->rectangles = rectangles;
+
+	return gameprop;
 }
 
 
-//// this is the function used to render a single frame
-void render_frame(kuta& m)
+/* this is the function used to render a single frame*/
+void render_frame(GameProperties* gameprop)
 {
-	kuta k = m;
-	int numberOfPoints = k.rectangles.size() * 4;
+	int numberOfPoints = gameprop->rectangles.size() * 4;
 	Point *points = new Point[numberOfPoints];
 
-	for (int i = 0; i < k.rectangles.size(); i++) {
-		CustomRectangle rectangle = k.rectangles[i];
-
-		points[i*4] = rectangle.points[0];
-		points[(i*4) + 1] = rectangle.points[1];
-		points[(i*4) + 2] = rectangle.points[2];
-		points[(i*4) + 3] = rectangle.points[3];
+	for (int i = 0; i < gameprop->rectangles.size(); i++) {
+		points[i * 4] = gameprop->rectangles[i].points[0];
+		points[(i * 4) + 1] = gameprop->rectangles[i].points[1];
+		points[(i * 4) + 2] = gameprop->rectangles[i].points[2];
+		points[(i * 4) + 3] = gameprop->rectangles[i].points[3];
 	}
 
 	LPDIRECT3DVERTEXBUFFER9 v_buffer;
-	k.d3ddev->CreateVertexBuffer(numberOfPoints * sizeof(Point),
+	gameprop->d3ddev->CreateVertexBuffer(numberOfPoints * sizeof(Point),
 		0,
 		CUSTOMFVF,
 		D3DPOOL_MANAGED,
 		&v_buffer,
 		NULL);
-	VOID* pVoid;    // the void* we were talking about
+	VOID* pVoid;
 
 	v_buffer->Lock(0, 0, (void**)&pVoid, 0);    // locks v_buffer, the buffer we made earlier
 	memcpy(pVoid, points, numberOfPoints * sizeof(Point));
 	v_buffer->Unlock();
 
-	k.d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-	k.d3ddev->BeginScene();
+	gameprop->d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	gameprop->d3ddev->BeginScene();
 
-	// select which vertex format we are using
 	// select the vertex buffer to display
-	k.d3ddev->SetFVF(CUSTOMFVF);
-	k.d3ddev->SetStreamSource(0, v_buffer, 0, sizeof(Point));
-	for(int i=0; i< k.rectangles.size(); i++){
+	gameprop->d3ddev->SetFVF(CUSTOMFVF);
+	gameprop->d3ddev->SetStreamSource(0, v_buffer, 0, sizeof(Point));
+	for (int i = 0; i < gameprop->rectangles.size(); i++) {
 		// copy the vertex buffer to the back buffer
-		k.d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, i * 4, 2);
+		gameprop->d3ddev->DrawPrimitive(D3DPT_TRIANGLESTRIP, i * 4, 2);
 	}
 
-	k.d3ddev->EndScene();
+	gameprop->d3ddev->EndScene();
 
-	k.d3ddev->Present(NULL, NULL, NULL, NULL);
+	gameprop->d3ddev->Present(NULL, NULL, NULL, NULL);
+
+	v_buffer->Release();    // close and release the vertex buffer
+	delete[] points;
+
+}
+
+/*updating the rectangles speed and movement*/
+void updateRectangles(GameProperties* gameprop) {
+	for (int i = 0; i < gameprop->rectangles.size(); i++) {
+		if (gameprop->rectangles[i].direction == LEFT) {
+			gameprop->rectangles[i].points[0].x -= gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[1].x -= gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[2].x -= gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[3].x -= gameprop->rectangles[i].speed;
+
+			if (gameprop->rectangles[i].points[0].x <= 0) {
+				gameprop->rectangles[i].direction = RIGHT;
+			}
+		}
+		else if (gameprop->rectangles[i].direction == RIGHT) {
+			gameprop->rectangles[i].points[0].x += gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[1].x += gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[2].x += gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[3].x += gameprop->rectangles[i].speed;
+
+			if (gameprop->rectangles[i].points[1].x >= 800) {
+				gameprop->rectangles[i].direction = LEFT;
+			}
+		}
+		else if (gameprop->rectangles[i].direction == UP) {
+			gameprop->rectangles[i].points[0].y += gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[1].y += gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[2].y += gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[3].y += gameprop->rectangles[i].speed;
+
+			if (gameprop->rectangles[i].points[2].y >= 600) {
+				gameprop->rectangles[i].direction = DOWN;
+			}
+		}
+		else {
+			gameprop->rectangles[i].points[0].y -= gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[1].y -= gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[2].y -= gameprop->rectangles[i].speed;
+			gameprop->rectangles[i].points[3].y -= gameprop->rectangles[i].speed;
+
+			if (gameprop->rectangles[i].points[0].y <= 0) {
+				gameprop->rectangles[i].direction = UP;
+			}
+		}
+	}
+
 }

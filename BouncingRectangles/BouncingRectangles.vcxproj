@@ -121,12 +121,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CreatingRectangle.cpp" />
+    <ClCompile Include="RectangleCreation.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CreatingRectangle.h" />
-    <ClInclude Include="main.h" />
+    <ClInclude Include="RectangleCreation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
